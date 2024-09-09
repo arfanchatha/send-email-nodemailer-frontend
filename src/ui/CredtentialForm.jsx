@@ -1,7 +1,8 @@
 import { useState } from "react";
 import "../index.css";
+import { BiHide, BiShow } from "react-icons/bi";
 
-function CredtentialForm({ formData, handleChange }) {
+function CredtentialForm({ formData, handleChange, sendingEmailStatus }) {
   const [passwordVisible, setPasswordVisible] = useState(false);
 
   const togglePasswordVisibility = () => {
@@ -19,7 +20,8 @@ function CredtentialForm({ formData, handleChange }) {
         placeholder="USER NAME"
         className="smtp-input"
         onChange={handleChange}
-        required
+        required={true}
+        disabled={sendingEmailStatus}
       />
       <div className="password-container">
         <input
@@ -29,14 +31,15 @@ function CredtentialForm({ formData, handleChange }) {
           placeholder="PASSWORD"
           className="smtp-input"
           onChange={handleChange}
-          required
+          required={true}
+          disabled={sendingEmailStatus}
         />
         <button
           type="button"
           className="password-toggle"
           onClick={togglePasswordVisibility}
         >
-          {passwordVisible ? "Hide" : "Show"}
+          {passwordVisible ? <BiHide size="30px" /> : <BiShow size="30px" />}
         </button>
       </div>
       <input
@@ -47,6 +50,7 @@ function CredtentialForm({ formData, handleChange }) {
         className="smtp-input"
         onChange={handleChange}
         required
+        disabled={sendingEmailStatus}
       />
       <input
         type="text"
@@ -55,6 +59,7 @@ function CredtentialForm({ formData, handleChange }) {
         placeholder="PORT: Leave empty if don't know port"
         className="smtp-input"
         onChange={handleChange}
+        disabled={sendingEmailStatus}
       />
     </>
   );

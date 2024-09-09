@@ -1,29 +1,38 @@
 import "../index.css";
 
-import { deleteFiles } from "../../apiFeatures";
+import { deleteFiles } from "../apiFetching/apiFeatures";
 
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
-function DeleteUploadedFiles() {
+function DeleteUploadedFiles({ tempId, sendingEmailStatus }) {
+  const queryClient = useQueryClient();
+
   const mutation = useMutation({
-    mutationFn: deleteFiles, // The function making the API call
+    mutationFn: deleteFiles,
     onSuccess: (data) => {
-      console.log("Files deleted successfully:", data);
+      // Invalidate and refetch the uploaded files names query
+      toast.success(data.message);
+      queryClient.resetQueries(["uploadedFiles", tempId]);
     },
-    onError: (error) => {
-      console.error("Error deleting files:", error);
+    onError: (err) => {
+      toast.error(err.message);
     },
   });
+
+  const handleDelete = function () {
+    mutation.mutate(tempId);
+  };
 
   return (
     <div className="delete-option">
       <label className="delete-files">Delete files if send email fails</label>
       <button
         className="upload-button"
-        onClick={() => mutation.mutate()}
-        disabled={mutation.isLoading}
+        onClick={handleDelete}
+        disabled={mutation.isPending || sendingEmailStatus}
       >
-        {mutation.isLoading ? "Deleting..." : "Delete All"}
+        {mutation.isPending ? "Deleting..." : "Delete All"}
       </button>
     </div>
   );

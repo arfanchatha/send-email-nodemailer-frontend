@@ -1,8 +1,17 @@
 import "../index.css";
 
-function EmailForm({ formData, handleChange }) {
+function EmailForm({ formData, handleChange, sendingEmailStatus }) {
   return (
     <div className="email-details">
+      <input
+        type="text"
+        name="cc"
+        placeholder="Cc"
+        className="subject"
+        value={formData.cc || ""}
+        onChange={handleChange}
+        disabled={sendingEmailStatus}
+      />
       <input
         type="text"
         name="subject"
@@ -10,6 +19,8 @@ function EmailForm({ formData, handleChange }) {
         className="subject"
         value={formData.subject || ""}
         onChange={handleChange}
+        required={true}
+        disabled={sendingEmailStatus}
       />
 
       <textarea
@@ -18,6 +29,8 @@ function EmailForm({ formData, handleChange }) {
         name="body"
         value={formData.body || ""}
         onChange={handleChange}
+        required={true}
+        disabled={sendingEmailStatus}
       ></textarea>
     </div>
   );

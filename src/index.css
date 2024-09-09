@@ -115,6 +115,16 @@ h1 {
   border-radius: 20px;
   box-sizing: border-box;
 }
+.modal-button {
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 3px solid #d3772a;
+  border-radius: 20px;
+  box-sizing: border-box;
+  background-color: white;
+  cursor: pointer;
+  color: #d3772a;
+}
 
 .body {
   width: 100%;
@@ -127,11 +137,12 @@ h1 {
 }
 
 .right-section h2 {
-  font-size: 14px;
-  margin-bottom: 20px;
-  /* background-color: #f28d31; */
+  margin-top: 0;
+  margin-bottom: 40px;
+
   color: #f28d31;
   padding: 10px;
+  padding-top: 0;
   border-radius: 20px;
   text-align: center;
 }
@@ -139,6 +150,7 @@ h1 {
 .smtp-input {
   background-color: #ddd;
   color: black;
+  margin-bottom: 20px;
 }
 
 .send-button {
@@ -162,6 +174,9 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-top: 10px;
+  margin-bottom: 0px;
+  padding-bottom: 0px;
 }
 .clear-button {
   background-color: rgb(122, 3, 235);
@@ -170,15 +185,22 @@ h1 {
 }
 
 .password-container {
+  width: 100%;
   display: flex;
   align-items: center;
+  background-color: #ddd;
+  /* padding: 10px; */
+  margin-bottom: 10px;
+
+  border-radius: 20px;
+  box-sizing: border-box;
 }
 
 .password-toggle {
   border: none;
   background: none;
   cursor: pointer;
-  margin-left: 8px;
+  margin-right: 8px;
   color: #007bff;
   font-size: 14px;
 }

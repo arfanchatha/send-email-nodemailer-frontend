@@ -1,10 +1,13 @@
 import { useState } from "react";
 import axios from "axios";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import "../index.css";
+import toast from "react-hot-toast";
 
-function UploadFiles() {
+function UploadFiles({ tempId, sendingEmailStatus }) {
   const [selectedFiles, setSelectedFiles] = useState(null);
   const [fileNames, setFileNames] = useState("No file selected");
+  const queryClient = useQueryClient();
 
   // Handle file input change
   const handleFileChange = (e) => {
@@ -19,21 +22,20 @@ function UploadFiles() {
     }
   };
 
-  // Handle file upload
-  const handleUpload = async () => {
-    if (!selectedFiles) {
-      alert("Please choose a file first!");
-      return;
-    }
+  // Mutation to upload files
+  const mutation = useMutation({
+    mutationFn: async () => {
+      if (!selectedFiles) {
+        throw new Error("No files selected");
+      }
 
-    const formData = new FormData();
-    for (let i = 0; i < selectedFiles.length; i++) {
-      formData.append("files", selectedFiles[i]);
-    }
+      const formData = new FormData();
+      for (let i = 0; i < selectedFiles.length; i++) {
+        formData.append("files", selectedFiles[i]);
+      }
 
-    try {
       const response = await axios.post(
-        "https://send-email-nodemailer-backend.onrender.com/api/v1/uploadfiles",
+        `http://localhost:5000/api/v1/uploadfiles/${tempId}`,
         formData,
         {
           headers: {
@@ -41,30 +43,48 @@ function UploadFiles() {
           },
         }
       );
-      alert("Files uploaded successfully!");
 
-      console.log("Server Response:", response.data);
+      return response.data;
+    },
+    onSuccess: () => {
+      toast.success("Files uploaded successfully!");
+
+      // Invalidate and refetch the files query
+      queryClient.invalidateQueries(["uploadedFiles", tempId]);
+
       // Reset the file input and file names
       setSelectedFiles(null);
       setFileNames("No file selected");
 
       // Clear the file input field in the DOM
       document.getElementById("file-input").value = null;
-    } catch (error) {
-      console.error("Error uploading files:", error);
-      alert("Failed to upload files. Please try again.");
-    }
-  };
+    },
+    onError: (error) => {
+      if (error.message === "No files selected") {
+        toast.error(`Error uploading files: ${error.message}`);
+      } else {
+        toast.error("Failed to upload files. Please try again.");
+      }
+    },
+  });
 
   return (
     <>
       <div className="file-upload">
-        <label htmlFor="file-input" className="choose-files">
+        <label
+          htmlFor="file-input"
+          className="choose-files"
+          aria-disabled={sendingEmailStatus}
+        >
           Choose file
         </label>
         <span className="file-name">{fileNames}</span>
-        <button className="upload-button" onClick={handleUpload}>
-          Upload
+        <button
+          className="upload-button"
+          onClick={() => mutation.mutate()}
+          disabled={mutation.isPending || sendingEmailStatus}
+        >
+          {mutation.isPending ? "Uploading..." : "Upload"}
         </button>
         <input
           type="file"
@@ -72,6 +92,7 @@ function UploadFiles() {
           multiple
           onChange={handleFileChange}
           style={{ display: "none" }} // Hide the default file input
+          disabled={sendingEmailStatus}
         />
       </div>
     </>
