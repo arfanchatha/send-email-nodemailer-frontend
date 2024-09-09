@@ -35,7 +35,7 @@ function UploadFiles({ tempId, sendingEmailStatus }) {
       }
 
       const response = await axios.post(
-        `http://localhost:5000/api/v1/uploadfiles/${tempId}`,
+        `https://send-email-nodemailer-backend.onrender.com/api/v1/uploadfiles/${tempId}`,
         formData,
         {
           headers: {
