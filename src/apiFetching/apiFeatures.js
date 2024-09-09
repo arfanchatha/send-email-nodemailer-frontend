@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const backendHost = "http://localhost:5000";
+const backendHost = "https://send-email-nodemailer-backend.onrender.com";
 
 export const deleteFiles = async (tempId) => {
   const response = await axios.delete(
